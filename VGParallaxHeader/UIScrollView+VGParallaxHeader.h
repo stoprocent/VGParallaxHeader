@@ -11,6 +11,7 @@ typedef NS_ENUM(NSInteger, VGParallaxHeaderMode) {
     VGParallaxHeaderModeCenter = 0,
     VGParallaxHeaderModeFill,
     VGParallaxHeaderModeTop,
+    VGParallaxHeaderModeTopFill,
 };
 
 @interface VGParallaxHeader : UIView
@@ -20,9 +21,15 @@ typedef NS_ENUM(NSInteger, VGParallaxHeaderMode) {
 
 @property (nonatomic, strong, readonly) VGParallaxHeader *parallaxHeader;
 
-- (void)shouldPositionParallaxHeader;
 - (void)setParallaxHeaderView:(UIView *)view
                          mode:(VGParallaxHeaderMode)mode
                        height:(CGFloat)height;
+
+- (void)setParallaxHeaderView:(UIView *)view
+                         mode:(VGParallaxHeaderMode)mode
+                       height:(CGFloat)height
+                       shadow:(BOOL)shadow;
+
+- (void)shouldPositionParallaxHeader;
 
 @end

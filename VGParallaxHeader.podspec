@@ -10,5 +10,6 @@ Pod::Spec.new do |s|
 	s.description = 'Only Parallax Header Class that should work with all kinds of Table Views and Scroll Views.'
 	s.frameworks = 'QuartzCore'
 	s.source_files = 'VGParallaxHeader/*.{h,m}'
+	s.dependency = 'PureLayout'
 	s.requires_arc = true
 end

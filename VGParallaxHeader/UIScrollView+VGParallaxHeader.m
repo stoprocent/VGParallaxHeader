@@ -19,13 +19,16 @@ static char UIScrollViewViewVGParallaxHeader;
 - (instancetype)initWithScrollView:(UIScrollView *)scrollView
                        contentView:(UIView *)view
                               mode:(VGParallaxHeaderMode)mode
-                            height:(CGFloat)height;
+                            height:(CGFloat)height
+                            shadow:(BOOL)shadow;
 
 @property (nonatomic, assign, getter=isInsideTableView) BOOL insideTableView;
 
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) UIView *contentView;
 @property (nonatomic, strong) UIImageView *shadowView;
+
+@property (nonatomic, weak) UIScrollView *scrollView;
 
 @property (nonatomic, assign) VGParallaxHeaderMode headerMode;
 @property (nonatomic, readwrite) CGFloat originalTopInset;
@@ -39,19 +42,36 @@ static char UIScrollViewViewVGParallaxHeader;
 #pragma mark - UIScrollView (Implementation)
 @implementation UIScrollView (VGParallaxHeader)
 
+
 - (void)setParallaxHeaderView:(UIView *)view
                          mode:(VGParallaxHeaderMode)mode
                        height:(CGFloat)height
 {
+    [self setParallaxHeaderView:view
+                           mode:mode
+                         height:height
+                         shadow:NO];
+}
+
+- (void)setParallaxHeaderView:(UIView *)view
+                         mode:(VGParallaxHeaderMode)mode
+                       height:(CGFloat)height
+                       shadow:(BOOL)shadow
+{
     self.parallaxHeader = [[VGParallaxHeader alloc] initWithScrollView:self
                                                            contentView:view
                                                                   mode:mode
-                                                                height:height];
+                                                                height:height
+                                                                shadow:shadow];
+    [self shouldPositionParallaxHeader];
+    
     // If UIScrollView adjust inset
     if (!self.parallaxHeader.isInsideTableView) {
         UIEdgeInsets selfContentInset = self.contentInset;
         selfContentInset.top += height;
+        
         self.contentInset = selfContentInset;
+        self.contentOffset = CGPointMake(0, -selfContentInset.top);
     }
     
     // Watch for inset changes
@@ -59,8 +79,6 @@ static char UIScrollViewViewVGParallaxHeader;
            forKeyPath:@"contentInset"
               options:NSKeyValueObservingOptionNew
               context:nil];
-    
-    [self shouldPositionParallaxHeader];
 }
 
 - (void)shouldPositionParallaxHeader
@@ -134,11 +152,14 @@ static char UIScrollViewViewVGParallaxHeader;
                        contentView:(UIView *)view
                               mode:(VGParallaxHeaderMode)mode
                             height:(CGFloat)height
+                            shadow:(BOOL)shadow
 {
     self = [super initWithFrame:CGRectMake(0, 0, CGRectGetWidth(scrollView.bounds), height)];
     if (!self) {
         return nil;
     }
+    
+    self.scrollView = scrollView;
     
     self.headerMode = mode;
     self.originalHeight = height;
@@ -149,12 +170,16 @@ static char UIScrollViewViewVGParallaxHeader;
     
     if (!self.isInsideTableView) {
         self.containerView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     }
     
     [self addSubview:self.containerView];
+    
     self.contentView = view;
     
-    [self addShadowView];
+    if (shadow) {
+        [self addShadowView];
+    }
     
     return self;
 }
@@ -162,6 +187,7 @@ static char UIScrollViewViewVGParallaxHeader;
 - (void)setContentView:(UIView *)contentView
 {
     if(_contentView != nil) {
+        [_containerView autoRemoveConstraintsAffectingView];
         [_contentView removeFromSuperview];
     }
     
@@ -182,6 +208,9 @@ static char UIScrollViewViewVGParallaxHeader;
         case VGParallaxHeaderModeTop:
             [self addContentViewModeTopConstraints];
             break;
+        case VGParallaxHeaderModeTopFill:
+            [self addContentViewModeTopFillConstraints];
+            break;
         case VGParallaxHeaderModeCenter:
         default:
             [self addContentViewModeCenterConstraints];
@@ -196,7 +225,9 @@ static char UIScrollViewViewVGParallaxHeader;
 {
     if ([keyPath isEqualToString:@"contentInset"]) {
         UIEdgeInsets edgeInsets = [[change valueForKey:@"new"] UIEdgeInsetsValue];
-        self.originalTopInset = edgeInsets.top - self.originalHeight;
+        
+        // If scroll view we need to fix inset (TableView has parallax view in table view header)
+        self.originalTopInset = edgeInsets.top - ((!self.isInsideTableView) ? self.originalHeight : 0);
         
         switch (self.headerMode) {
             case VGParallaxHeaderModeFill:
@@ -206,10 +237,18 @@ static char UIScrollViewViewVGParallaxHeader;
             case VGParallaxHeaderModeTop:
                 self.insetAwarePositionConstraint.constant = self.originalTopInset;
                 break;
+            case VGParallaxHeaderModeTopFill:
+                self.insetAwarePositionConstraint.constant = self.originalTopInset;
+                self.insetAwareSizeConstraint.constant = -self.originalTopInset;
+                break;
             case VGParallaxHeaderModeCenter:
             default:
                 self.insetAwarePositionConstraint.constant = self.originalTopInset / 2;
                 break;
+        }
+        
+        if(!self.isInsideTableView) {
+            self.scrollView.contentOffset = CGPointMake(0, -self.scrollView.contentInset.top);
         }
     }
 }
@@ -243,7 +282,26 @@ static char UIScrollViewViewVGParallaxHeader;
                                                                 excludingEdge:ALEdgeBottom];
     self.insetAwarePositionConstraint = [array firstObject];
     
+    [self.contentView autoSetDimension:ALDimensionHeight
+                                toSize:self.originalHeight];
+}
+
+- (void)addContentViewModeTopFillConstraints
+{
+    NSArray *array = [self.contentView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(self.originalTopInset, 0, 0, 0)
+                                                                excludingEdge:ALEdgeBottom];
+    self.insetAwarePositionConstraint = [array firstObject];
     
+    NSLayoutConstraint *constraint = [self.contentView autoSetDimension:ALDimensionHeight
+                                                                 toSize:self.originalHeight
+                                                               relation:NSLayoutRelationGreaterThanOrEqual];
+    constraint.priority = UILayoutPriorityRequired;
+    
+    self.insetAwareSizeConstraint = [self.contentView autoMatchDimension:ALDimensionHeight
+                                                             toDimension:ALDimensionHeight
+                                                                  ofView:self.containerView
+                                                              withOffset:-self.originalTopInset];
+    self.insetAwareSizeConstraint.priority = UILayoutPriorityDefaultHigh;
 }
 
 - (void)addContentViewModeCenterConstraints
@@ -301,13 +359,11 @@ static char UIScrollViewViewVGParallaxHeader;
     CGGradientRef gradient3 = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)gradient3Colors, gradient3Locations);
     
     //// Rectangle Drawing
-    
     UIBezierPath* rectanglePath = [UIBezierPath bezierPathWithRect: (CGRect) {CGPointZero, size} ];
     CGContextSaveGState(context);
     [rectanglePath addClip];
     CGContextDrawLinearGradient(context, gradient3, CGPointMake(0, size.height), CGPointMake(0, 0), 0);
     CGContextRestoreGState(context);
-    
     
     //// Cleanup
     CGGradientRelease(gradient3);
