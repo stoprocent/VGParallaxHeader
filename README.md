@@ -1,4 +1,4 @@
-# VGParallaxheader
+# VGParallaxHeader
 Parallax Header Class (UIScrollView/UITableView Category) that should work with all kinds of Table Views and Scroll Views while using Auto Layout.
 
 **Best way to explore all configurations is to download Example Project and try it.**
