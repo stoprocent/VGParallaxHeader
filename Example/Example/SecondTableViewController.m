@@ -8,9 +8,10 @@
 
 #import "SecondTableViewController.h"
 #import "HeaderView.h"
+#import "UIColor+CrossFade.h"
 
 @interface SecondTableViewController ()
-
+@property (nonatomic, strong) HeaderView *headerView;
 @end
 
 @implementation SecondTableViewController
@@ -18,11 +19,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    HeaderView *headerView = [HeaderView instantiateFromNib];
+    self.headerView = [HeaderView instantiateFromNib];
+    self.headerView.backgroundColor = [UIColor colorWithRed:0.59 green:0.85 blue:0.27 alpha:1];
     
-    [self.tableView setParallaxHeaderView:headerView
+    [self.tableView setParallaxHeaderView:self.headerView
                                      mode:VGParallaxHeaderModeTopFill
-                                   height:200];
+                                   height:200
+                          shadowBehaviour:VGParallaxHeaderShadowBehaviourHidden];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle
@@ -33,6 +36,11 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     [self.tableView shouldPositionParallaxHeader];
+    
+    CGFloat ratio = fmaxf(0, scrollView.parallaxHeader.progress - 1);
+    self.headerView.backgroundColor = [UIColor colorForFadeBetweenFirstColor:[UIColor colorWithRed:0.59 green:0.85 blue:0.27 alpha:1]
+                                                                 secondColor:[UIColor colorWithRed:0.86 green:0.09 blue:0.13 alpha:1]
+                                                                     atRatio:ratio];
 }
 
 #pragma mark - Table view data source

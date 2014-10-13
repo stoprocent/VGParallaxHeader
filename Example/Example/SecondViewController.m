@@ -7,7 +7,7 @@
 //
 
 #import "SecondViewController.h"
-#import "HeaderView.h"
+#import "HeaderViewWithImage.h"
 
 @interface SecondViewController ()
 
@@ -19,7 +19,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    HeaderView *headerView = [HeaderView instantiateFromNib];
+    HeaderViewWithImage *headerView = [HeaderViewWithImage instantiateFromNib];
+    
     
     [self.scrollView setParallaxHeaderView:headerView
                                       mode:VGParallaxHeaderModeFill

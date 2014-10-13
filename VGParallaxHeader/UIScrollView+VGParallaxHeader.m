@@ -11,7 +11,8 @@
 #import <QuartzCore/QuartzCore.h>
 #import <PureLayout.h>
 
-static char UIScrollViewViewVGParallaxHeader;
+static char UIScrollViewVGParallaxHeader;
+static void *VGParallaxHeaderObserverContext = &VGParallaxHeaderObserverContext;
 
 #pragma mark - VGParallaxHeader (Interface)
 @interface VGParallaxHeader ()
@@ -20,22 +21,28 @@ static char UIScrollViewViewVGParallaxHeader;
                        contentView:(UIView *)view
                               mode:(VGParallaxHeaderMode)mode
                             height:(CGFloat)height
-                            shadow:(BOOL)shadow;
+                   shadowBehaviour:(VGParallaxHeaderShadowBehaviour)shadowBehaviour;
 
-@property (nonatomic, assign, getter=isInsideTableView) BOOL insideTableView;
+- (void)updateShadowViewWithProgress:(CGFloat)progress;
 
-@property (nonatomic, strong) UIView *containerView;
-@property (nonatomic, strong) UIView *contentView;
-@property (nonatomic, strong) UIImageView *shadowView;
+@property (nonatomic, assign, readwrite, getter=isInsideTableView) BOOL insideTableView;
 
-@property (nonatomic, weak) UIScrollView *scrollView;
+@property (nonatomic, assign, readwrite) VGParallaxHeaderMode mode;
+@property (nonatomic, assign, readwrite) VGParallaxHeaderShadowBehaviour shadowBehaviour;
 
-@property (nonatomic, assign) VGParallaxHeaderMode headerMode;
+@property (nonatomic, strong, readwrite) UIView *containerView;
+@property (nonatomic, strong, readwrite) UIView *contentView;
+@property (nonatomic, strong, readwrite) UIImageView *shadowView;
+
+@property (nonatomic, weak, readwrite) UIScrollView *scrollView;
+
 @property (nonatomic, readwrite) CGFloat originalTopInset;
 @property (nonatomic, readwrite) CGFloat originalHeight;
 
-@property (nonatomic, strong) NSLayoutConstraint *insetAwarePositionConstraint;
-@property (nonatomic, strong) NSLayoutConstraint *insetAwareSizeConstraint;
+@property (nonatomic, strong, readwrite) NSLayoutConstraint *insetAwarePositionConstraint;
+@property (nonatomic, strong, readwrite) NSLayoutConstraint *insetAwareSizeConstraint;
+
+@property (nonatomic, assign, readwrite) CGFloat progress;
 
 @end
 
@@ -50,19 +57,21 @@ static char UIScrollViewViewVGParallaxHeader;
     [self setParallaxHeaderView:view
                            mode:mode
                          height:height
-                         shadow:NO];
+                shadowBehaviour:VGParallaxHeaderShadowBehaviourHidden];
 }
 
 - (void)setParallaxHeaderView:(UIView *)view
                          mode:(VGParallaxHeaderMode)mode
                        height:(CGFloat)height
-                       shadow:(BOOL)shadow
+              shadowBehaviour:(VGParallaxHeaderShadowBehaviour)shadowBehaviour
 {
+    // New VGParallaxHeader
     self.parallaxHeader = [[VGParallaxHeader alloc] initWithScrollView:self
                                                            contentView:view
                                                                   mode:mode
                                                                 height:height
-                                                                shadow:shadow];
+                                                       shadowBehaviour:shadowBehaviour];
+    // Calling this to position everything right
     [self shouldPositionParallaxHeader];
     
     // If UIScrollView adjust inset
@@ -76,9 +85,9 @@ static char UIScrollViewViewVGParallaxHeader;
     
     // Watch for inset changes
     [self addObserver:self.parallaxHeader
-           forKeyPath:@"contentInset"
+           forKeyPath:NSStringFromSelector(@selector(contentInset))
               options:NSKeyValueObservingOptionNew
-              context:nil];
+              context:VGParallaxHeaderObserverContext];
 }
 
 - (void)shouldPositionParallaxHeader
@@ -93,23 +102,29 @@ static char UIScrollViewViewVGParallaxHeader;
 
 - (void)positionTableViewParallaxHeader
 {
+    CGFloat height = self.contentOffset.y * -1 + self.parallaxHeader.originalHeight;
+    CGFloat scaleProgress = fmaxf(0, (1 - ((self.contentOffset.y + self.parallaxHeader.originalTopInset) / self.parallaxHeader.originalHeight)));
+    self.parallaxHeader.progress = scaleProgress;
+    
     if (self.contentOffset.y < self.parallaxHeader.originalHeight) {
-        CGFloat height = self.contentOffset.y * -1 + self.parallaxHeader.originalHeight;
-        CGFloat scrollProgress = fminf(1, (self.contentOffset.y/self.parallaxHeader.originalHeight));
-        
-        self.parallaxHeader.shadowView.alpha = scrollProgress;
+        // Update Shadow View
+        [self.parallaxHeader updateShadowViewWithProgress:fminf(1, scaleProgress)];
+        // This is where the magic is happening
         self.parallaxHeader.containerView.frame = CGRectMake(0, self.contentOffset.y, CGRectGetWidth(self.frame), height);
     }
 }
 
 - (void)positionScrollViewParallaxHeader
 {
+    CGFloat height = self.contentOffset.y * -1;
+    CGFloat scaleProgress = fmaxf(0, (height / (self.parallaxHeader.originalHeight + self.parallaxHeader.originalTopInset)));
+    self.parallaxHeader.progress = scaleProgress;
+    
     if (self.contentOffset.y < 0) {
-        CGFloat yOffset = self.contentOffset.y * -1;
-        CGFloat scrollProgress = fminf(1, (yOffset / (self.parallaxHeader.originalHeight + self.parallaxHeader.originalTopInset)));
-        
-        self.parallaxHeader.shadowView.alpha = (1 - scrollProgress);
-        self.parallaxHeader.frame = CGRectMake(0, self.contentOffset.y, CGRectGetWidth(self.frame), yOffset);
+        // Update Shadow View
+        [self.parallaxHeader updateShadowViewWithProgress:fminf(1, scaleProgress)];
+        // This is where the magic is happening
+        self.parallaxHeader.frame = CGRectMake(0, self.contentOffset.y, CGRectGetWidth(self.frame), height);
     }
 }
 
@@ -135,12 +150,12 @@ static char UIScrollViewViewVGParallaxHeader;
     }
     
     // Set Associated Object
-    objc_setAssociatedObject(self, &UIScrollViewViewVGParallaxHeader, parallaxHeader, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self, &UIScrollViewVGParallaxHeader, parallaxHeader, OBJC_ASSOCIATION_ASSIGN);
 }
 
 - (VGParallaxHeader *)parallaxHeader
 {
-    return objc_getAssociatedObject(self, &UIScrollViewViewVGParallaxHeader);
+    return objc_getAssociatedObject(self, &UIScrollViewVGParallaxHeader);
 }
 
 @end
@@ -148,20 +163,34 @@ static char UIScrollViewViewVGParallaxHeader;
 #pragma mark - VGParallaxHeader (Implementation)
 @implementation VGParallaxHeader
 
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if (!self) {
+        return nil;
+    }
+    
+    // FIXME: Init with storyboards not yet supported
+
+    return self;
+}
+
 - (instancetype)initWithScrollView:(UIScrollView *)scrollView
                        contentView:(UIView *)view
                               mode:(VGParallaxHeaderMode)mode
                             height:(CGFloat)height
-                            shadow:(BOOL)shadow
+                   shadowBehaviour:(VGParallaxHeaderShadowBehaviour)shadowBehaviour
 {
     self = [super initWithFrame:CGRectMake(0, 0, CGRectGetWidth(scrollView.bounds), height)];
     if (!self) {
         return nil;
     }
     
+    self.mode = mode;
+    self.shadowBehaviour = shadowBehaviour;
+    
     self.scrollView = scrollView;
     
-    self.headerMode = mode;
     self.originalHeight = height;
     self.originalTopInset = scrollView.contentInset.top;
     
@@ -177,9 +206,7 @@ static char UIScrollViewViewVGParallaxHeader;
     
     self.contentView = view;
     
-    if (shadow) {
-        [self addShadowView];
-    }
+    [self addShadowView];
     
     return self;
 }
@@ -195,13 +222,14 @@ static char UIScrollViewViewVGParallaxHeader;
     _contentView.translatesAutoresizingMaskIntoConstraints = NO;
     
     [self.containerView addSubview:_contentView];
-    
+
+    // Constraints
     [self setupContentViewMode];
 }
 
 - (void)setupContentViewMode
 {
-    switch (self.headerMode) {
+    switch (self.mode) {
         case VGParallaxHeaderModeFill:
             [self addContentViewModeFillConstraints];
             break;
@@ -223,13 +251,13 @@ static char UIScrollViewViewVGParallaxHeader;
                         change:(NSDictionary *)change
                        context:(void *)context
 {
-    if ([keyPath isEqualToString:@"contentInset"]) {
+    if ([keyPath isEqualToString:NSStringFromSelector(@selector(contentInset))] && context == VGParallaxHeaderObserverContext) {
         UIEdgeInsets edgeInsets = [[change valueForKey:@"new"] UIEdgeInsetsValue];
         
         // If scroll view we need to fix inset (TableView has parallax view in table view header)
         self.originalTopInset = edgeInsets.top - ((!self.isInsideTableView) ? self.originalHeight : 0);
         
-        switch (self.headerMode) {
+        switch (self.mode) {
             case VGParallaxHeaderModeFill:
                 self.insetAwarePositionConstraint.constant = self.originalTopInset / 2;
                 self.insetAwareSizeConstraint.constant = -self.originalTopInset;
@@ -318,8 +346,30 @@ static char UIScrollViewViewVGParallaxHeader;
                                                              withOffset:self.originalTopInset/2];
 }
 
+#pragma mark - VGParallaxHeader (Shadow)
+- (void)updateShadowViewWithProgress:(CGFloat)progress
+{
+    switch (self.shadowBehaviour) {
+        case VGParallaxHeaderShadowBehaviourAppearing:
+            self.shadowView.alpha = 1 - progress;
+            break;
+        case VGParallaxHeaderShadowBehaviourDisappearing:
+            self.shadowView.alpha = progress;
+            break;
+        case VGParallaxHeaderShadowBehaviourAlways:
+        case VGParallaxHeaderShadowBehaviourHidden:
+        default:
+            self.shadowView.alpha = 1;
+            break;
+    }
+}
+
 - (void)addShadowView
 {
+    if (self.shadowBehaviour == VGParallaxHeaderShadowBehaviourHidden) {
+        return;
+    }
+    
     CGFloat shadowHeight = 30;
     
     UIImage *shadowImage = [self shadowViewImageWithHeight:shadowHeight];
@@ -327,16 +377,19 @@ static char UIScrollViewViewVGParallaxHeader;
     
     shadowView.contentMode = UIViewContentModeScaleToFill;
     shadowView.translatesAutoresizingMaskIntoConstraints = NO;
-    shadowView.alpha = 0;
+    shadowView.alpha = (self.shadowBehaviour == VGParallaxHeaderShadowBehaviourDisappearing ? 1 : 0);
     
-    
+    // Add Shadow
     [self addSubview:shadowView];
     
+    // Constraints
     [shadowView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero
                                          excludingEdge:ALEdgeTop];
+    
     [shadowView autoSetDimension:ALDimensionHeight
                           toSize:shadowHeight];
     
+    // Set property
     self.shadowView = shadowView;
 }
 
@@ -355,6 +408,7 @@ static char UIScrollViewViewVGParallaxHeader;
     NSArray* gradient3Colors = [NSArray arrayWithObjects:
                                 (id)[UIColor colorWithWhite:0 alpha:0.3].CGColor,
                                 (id)[UIColor clearColor].CGColor, nil];
+    
     CGFloat gradient3Locations[] = {0, 1};
     CGGradientRef gradient3 = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)gradient3Colors, gradient3Locations);
     
@@ -378,7 +432,8 @@ static char UIScrollViewViewVGParallaxHeader;
 {
     if (self.superview && newSuperview == nil) {
         [self.superview removeObserver:self
-                            forKeyPath:@"contentInset"];
+                            forKeyPath:NSStringFromSelector(@selector(contentInset))
+                               context:VGParallaxHeaderObserverContext];
     }
 }
 

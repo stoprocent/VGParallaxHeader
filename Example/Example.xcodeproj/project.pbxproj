@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D8D815D19EBE21400ABAB19 /* HeaderViewWithImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D8D815C19EBE21400ABAB19 /* HeaderViewWithImage.m */; };
+		0D8D815F19EBE22500ABAB19 /* HeaderViewWithImage.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8D815E19EBE22500ABAB19 /* HeaderViewWithImage.xib */; };
+		0D8D816219EBF20A00ABAB19 /* UIColor+CrossFade.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D8D816119EBF20A00ABAB19 /* UIColor+CrossFade.m */; };
 		0DD8327D19D5AB8E00F214D3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DD8327C19D5AB8E00F214D3 /* main.m */; };
 		0DD8328019D5AB8E00F214D3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DD8327F19D5AB8E00F214D3 /* AppDelegate.m */; };
 		0DD8328319D5AB8E00F214D3 /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DD8328219D5AB8E00F214D3 /* FirstViewController.m */; };
@@ -34,6 +37,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0D8D815B19EBE21400ABAB19 /* HeaderViewWithImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeaderViewWithImage.h; sourceTree = "<group>"; };
+		0D8D815C19EBE21400ABAB19 /* HeaderViewWithImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeaderViewWithImage.m; sourceTree = "<group>"; };
+		0D8D815E19EBE22500ABAB19 /* HeaderViewWithImage.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeaderViewWithImage.xib; sourceTree = "<group>"; };
+		0D8D816019EBF20A00ABAB19 /* UIColor+CrossFade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+CrossFade.h"; sourceTree = "<group>"; };
+		0D8D816119EBF20A00ABAB19 /* UIColor+CrossFade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+CrossFade.m"; sourceTree = "<group>"; };
 		0DD8327719D5AB8E00F214D3 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0DD8327B19D5AB8E00F214D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0DD8327C19D5AB8E00F214D3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -115,9 +123,14 @@
 				0DD832A819D5AE8700F214D3 /* FirstTableViewController.m */,
 				0DD832AA19D5AE9400F214D3 /* SecondTableViewController.h */,
 				0DD832AB19D5AE9400F214D3 /* SecondTableViewController.m */,
+				0D8D815B19EBE21400ABAB19 /* HeaderViewWithImage.h */,
+				0D8D815C19EBE21400ABAB19 /* HeaderViewWithImage.m */,
+				0D8D815E19EBE22500ABAB19 /* HeaderViewWithImage.xib */,
 				0DD832AD19D5B13400F214D3 /* HeaderView.h */,
 				0DD832AE19D5B13500F214D3 /* HeaderView.m */,
 				0DD832B019D5B14300F214D3 /* HeaderView.xib */,
+				0D8D816019EBF20A00ABAB19 /* UIColor+CrossFade.h */,
+				0D8D816119EBF20A00ABAB19 /* UIColor+CrossFade.m */,
 				0DD8328719D5AB8E00F214D3 /* Main.storyboard */,
 				0DD8328A19D5AB8E00F214D3 /* Images.xcassets */,
 				0DD8328C19D5AB8E00F214D3 /* LaunchScreen.xib */,
@@ -255,6 +268,7 @@
 				0DD8328919D5AB8E00F214D3 /* Main.storyboard in Resources */,
 				0DD8328E19D5AB8E00F214D3 /* LaunchScreen.xib in Resources */,
 				0DD8328B19D5AB8E00F214D3 /* Images.xcassets in Resources */,
+				0D8D815F19EBE22500ABAB19 /* HeaderViewWithImage.xib in Resources */,
 				0DD832B119D5B14300F214D3 /* HeaderView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -310,7 +324,9 @@
 				0DD832A619D5ABAE00F214D3 /* UIScrollView+VGParallaxHeader.m in Sources */,
 				0DD832A919D5AE8700F214D3 /* FirstTableViewController.m in Sources */,
 				0DD832AF19D5B13500F214D3 /* HeaderView.m in Sources */,
+				0D8D816219EBF20A00ABAB19 /* UIColor+CrossFade.m in Sources */,
 				0DD8328019D5AB8E00F214D3 /* AppDelegate.m in Sources */,
+				0D8D815D19EBE21400ABAB19 /* HeaderViewWithImage.m in Sources */,
 				0DD8328319D5AB8E00F214D3 /* FirstViewController.m in Sources */,
 				0DD832AC19D5AE9400F214D3 /* SecondTableViewController.m in Sources */,
 				0DD8327D19D5AB8E00F214D3 /* main.m in Sources */,

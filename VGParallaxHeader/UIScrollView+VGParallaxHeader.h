@@ -14,7 +14,18 @@ typedef NS_ENUM(NSInteger, VGParallaxHeaderMode) {
     VGParallaxHeaderModeTopFill,
 };
 
+typedef NS_ENUM(NSInteger, VGParallaxHeaderShadowBehaviour) {
+    VGParallaxHeaderShadowBehaviourHidden = 0,
+    VGParallaxHeaderShadowBehaviourAppearing,
+    VGParallaxHeaderShadowBehaviourDisappearing,
+    VGParallaxHeaderShadowBehaviourAlways,
+};
+
 @interface VGParallaxHeader : UIView
+@property (nonatomic, assign, readonly) VGParallaxHeaderMode mode;
+@property (nonatomic, assign, readonly) VGParallaxHeaderShadowBehaviour shadowBehaviour;
+@property (nonatomic, assign, readonly, getter=isInsideTableView) BOOL insideTableView;
+@property (nonatomic, assign, readonly) CGFloat progress;
 @end
 
 @interface UIScrollView (VGParallaxHeader)
@@ -28,7 +39,7 @@ typedef NS_ENUM(NSInteger, VGParallaxHeaderMode) {
 - (void)setParallaxHeaderView:(UIView *)view
                          mode:(VGParallaxHeaderMode)mode
                        height:(CGFloat)height
-                       shadow:(BOOL)shadow;
+              shadowBehaviour:(VGParallaxHeaderShadowBehaviour)shadowBehaviour;
 
 - (void)shouldPositionParallaxHeader;
 

@@ -24,7 +24,8 @@
     
     [self.scrollView setParallaxHeaderView:headerView
                                       mode:VGParallaxHeaderModeCenter
-                                    height:200];
+                                    height:200
+                           shadowBehaviour:VGParallaxHeaderShadowBehaviourDisappearing];
     
     self.scrollView.parallaxHeader.backgroundColor = [UIColor lightGrayColor];
 }

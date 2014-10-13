@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment defaultVersion="1792" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="3us-ga-XSv">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Grumpy-Cat" translatesAutoresizingMaskIntoConstraints="NO" id="T7I-F0-pOe">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hello Ladies..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NAO-cT-xBc">
+                    <rect key="frame" x="162" y="273" width="277" height="54"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="45"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My position is fixed" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TNj-sY-bfs">
+                    <rect key="frame" x="226" y="40" width="149" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstAttribute="centerX" secondItem="NAO-cT-xBc" secondAttribute="centerX" id="117-Pf-SKs"/>
+                <constraint firstItem="TNj-sY-bfs" firstAttribute="top" secondItem="3us-ga-XSv" secondAttribute="top" constant="40" id="15F-u1-Exh"/>
+                <constraint firstAttribute="centerX" secondItem="TNj-sY-bfs" secondAttribute="centerX" id="9pN-Td-yxK"/>
+                <constraint firstItem="T7I-F0-pOe" firstAttribute="top" secondItem="3us-ga-XSv" secondAttribute="top" id="V18-hw-Mil"/>
+                <constraint firstAttribute="trailing" secondItem="T7I-F0-pOe" secondAttribute="trailing" id="dvL-AQ-y4X"/>
+                <constraint firstAttribute="centerY" secondItem="NAO-cT-xBc" secondAttribute="centerY" id="e2L-30-OLw"/>
+                <constraint firstItem="T7I-F0-pOe" firstAttribute="leading" secondItem="3us-ga-XSv" secondAttribute="leading" id="io1-78-Yic"/>
+                <constraint firstAttribute="bottom" secondItem="T7I-F0-pOe" secondAttribute="bottom" id="ruq-7V-Dtu"/>
+            </constraints>
+            <point key="canvasLocation" x="269" y="201"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Grumpy-Cat" width="400" height="266"/>
+    </resources>
+</document>

@@ -23,12 +23,15 @@
     
     [self.tableView setParallaxHeaderView:headerView
                                      mode:VGParallaxHeaderModeFill
-                                   height:200];
+                                   height:200
+                          shadowBehaviour:VGParallaxHeaderShadowBehaviourAppearing];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     [self.tableView shouldPositionParallaxHeader];
+    // 
+    NSLog(@"Progress: %f", scrollView.parallaxHeader.progress);
 }
 
 - (void)viewDidLayoutSubviews
