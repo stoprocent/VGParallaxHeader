@@ -12,7 +12,7 @@ Parallax Header Class (UIScrollView/UITableView Category) that should work with 
 You can use CocoaPods:
 
 ```ruby
-pod 'VGParallaxHeader', :git => 'https://github.com/stoprocent/VGParallaxHeader.git'
+pod 'VGParallaxHeader'
 ```
 
 ### Using VGParallaxheader
