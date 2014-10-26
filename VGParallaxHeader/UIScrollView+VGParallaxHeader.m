@@ -214,7 +214,6 @@ static void *VGParallaxHeaderObserverContext = &VGParallaxHeaderObserverContext;
 - (void)setContentView:(UIView *)contentView
 {
     if(_contentView != nil) {
-        [_containerView autoRemoveConstraintsAffectingView];
         [_contentView removeFromSuperview];
     }
     

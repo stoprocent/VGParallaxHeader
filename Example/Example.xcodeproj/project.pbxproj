@@ -67,7 +67,8 @@
 		0DD832AE19D5B13500F214D3 /* HeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeaderView.m; sourceTree = "<group>"; };
 		0DD832B019D5B14300F214D3 /* HeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeaderView.xib; sourceTree = "<group>"; };
 		153AD5A6322444F6B47B1246 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		A9676625E79642CA9BBB2625 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		75B01BF70983C988B8B87AE1 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		BD40FD8E071CC3ED5C29A32E /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,8 +96,8 @@
 				0DD8327919D5AB8E00F214D3 /* Example */,
 				0DD8329619D5AB8E00F214D3 /* ExampleTests */,
 				0DD8327819D5AB8E00F214D3 /* Products */,
-				A9676625E79642CA9BBB2625 /* Pods.xcconfig */,
 				C579A779B0AC4D01B7593BEA /* Frameworks */,
+				CB278C731E5DAA22BC4D9E03 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -112,28 +113,19 @@
 		0DD8327919D5AB8E00F214D3 /* Example */ = {
 			isa = PBXGroup;
 			children = (
+				0DFA6F1B19FD096C00E253CE /* Shared */,
 				0DD832A319D5ABAE00F214D3 /* VGParallaxHeader */,
+				0DFA6F1719FD092400E253CE /* Table 1 */,
+				0DFA6F1819FD093100E253CE /* Table 2 */,
+				0DFA6F1919FD093900E253CE /* Scroll 1 */,
+				0DFA6F1A19FD094500E253CE /* Scroll 2 */,
+				0DFA6F1D19FD099800E253CE /* Storyboard 1 */,
+				0DFA6F1C19FD097800E253CE /* Util */,
 				0DD8327E19D5AB8E00F214D3 /* AppDelegate.h */,
 				0DD8327F19D5AB8E00F214D3 /* AppDelegate.m */,
-				0DD8328119D5AB8E00F214D3 /* FirstViewController.h */,
-				0DD8328219D5AB8E00F214D3 /* FirstViewController.m */,
-				0DD8328419D5AB8E00F214D3 /* SecondViewController.h */,
-				0DD8328519D5AB8E00F214D3 /* SecondViewController.m */,
-				0DD832A719D5AE8700F214D3 /* FirstTableViewController.h */,
-				0DD832A819D5AE8700F214D3 /* FirstTableViewController.m */,
-				0DD832AA19D5AE9400F214D3 /* SecondTableViewController.h */,
-				0DD832AB19D5AE9400F214D3 /* SecondTableViewController.m */,
-				0D8D815B19EBE21400ABAB19 /* HeaderViewWithImage.h */,
-				0D8D815C19EBE21400ABAB19 /* HeaderViewWithImage.m */,
-				0D8D815E19EBE22500ABAB19 /* HeaderViewWithImage.xib */,
-				0DD832AD19D5B13400F214D3 /* HeaderView.h */,
-				0DD832AE19D5B13500F214D3 /* HeaderView.m */,
-				0DD832B019D5B14300F214D3 /* HeaderView.xib */,
-				0D8D816019EBF20A00ABAB19 /* UIColor+CrossFade.h */,
-				0D8D816119EBF20A00ABAB19 /* UIColor+CrossFade.m */,
 				0DD8328719D5AB8E00F214D3 /* Main.storyboard */,
-				0DD8328A19D5AB8E00F214D3 /* Images.xcassets */,
 				0DD8328C19D5AB8E00F214D3 /* LaunchScreen.xib */,
+				0DD8328A19D5AB8E00F214D3 /* Images.xcassets */,
 				0DD8327A19D5AB8E00F214D3 /* Supporting Files */,
 			);
 			path = Example;
@@ -175,12 +167,86 @@
 			path = ../../VGParallaxHeader;
 			sourceTree = "<group>";
 		};
+		0DFA6F1719FD092400E253CE /* Table 1 */ = {
+			isa = PBXGroup;
+			children = (
+				0DD832A719D5AE8700F214D3 /* FirstTableViewController.h */,
+				0DD832A819D5AE8700F214D3 /* FirstTableViewController.m */,
+			);
+			name = "Table 1";
+			sourceTree = "<group>";
+		};
+		0DFA6F1819FD093100E253CE /* Table 2 */ = {
+			isa = PBXGroup;
+			children = (
+				0DD832AA19D5AE9400F214D3 /* SecondTableViewController.h */,
+				0DD832AB19D5AE9400F214D3 /* SecondTableViewController.m */,
+			);
+			name = "Table 2";
+			sourceTree = "<group>";
+		};
+		0DFA6F1919FD093900E253CE /* Scroll 1 */ = {
+			isa = PBXGroup;
+			children = (
+				0DD8328119D5AB8E00F214D3 /* FirstViewController.h */,
+				0DD8328219D5AB8E00F214D3 /* FirstViewController.m */,
+			);
+			name = "Scroll 1";
+			sourceTree = "<group>";
+		};
+		0DFA6F1A19FD094500E253CE /* Scroll 2 */ = {
+			isa = PBXGroup;
+			children = (
+				0DD8328419D5AB8E00F214D3 /* SecondViewController.h */,
+				0DD8328519D5AB8E00F214D3 /* SecondViewController.m */,
+			);
+			name = "Scroll 2";
+			sourceTree = "<group>";
+		};
+		0DFA6F1B19FD096C00E253CE /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				0D8D815B19EBE21400ABAB19 /* HeaderViewWithImage.h */,
+				0D8D815C19EBE21400ABAB19 /* HeaderViewWithImage.m */,
+				0D8D815E19EBE22500ABAB19 /* HeaderViewWithImage.xib */,
+				0DD832AD19D5B13400F214D3 /* HeaderView.h */,
+				0DD832AE19D5B13500F214D3 /* HeaderView.m */,
+				0DD832B019D5B14300F214D3 /* HeaderView.xib */,
+			);
+			name = Shared;
+			sourceTree = "<group>";
+		};
+		0DFA6F1C19FD097800E253CE /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				0D8D816019EBF20A00ABAB19 /* UIColor+CrossFade.h */,
+				0D8D816119EBF20A00ABAB19 /* UIColor+CrossFade.m */,
+			);
+			name = Util;
+			sourceTree = "<group>";
+		};
+		0DFA6F1D19FD099800E253CE /* Storyboard 1 */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Storyboard 1";
+			sourceTree = "<group>";
+		};
 		C579A779B0AC4D01B7593BEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				153AD5A6322444F6B47B1246 /* libPods.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CB278C731E5DAA22BC4D9E03 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				75B01BF70983C988B8B87AE1 /* Pods.debug.xcconfig */,
+				BD40FD8E071CC3ED5C29A32E /* Pods.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -310,7 +376,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -449,7 +515,7 @@
 		};
 		0DD8329E19D5AB8E00F214D3 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A9676625E79642CA9BBB2625 /* Pods.xcconfig */;
+			baseConfigurationReference = 75B01BF70983C988B8B87AE1 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Example/Info.plist;
@@ -461,7 +527,7 @@
 		};
 		0DD8329F19D5AB8E00F214D3 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A9676625E79642CA9BBB2625 /* Pods.xcconfig */;
+			baseConfigurationReference = BD40FD8E071CC3ED5C29A32E /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Example/Info.plist;

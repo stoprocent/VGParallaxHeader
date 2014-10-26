@@ -1,29 +1,45 @@
-# PureLayout [![Build Status](https://travis-ci.org/smileyborg/PureLayout.svg?branch=master)](https://travis-ci.org/smileyborg/PureLayout)
+# [![PureLayout](https://github.com/smileyborg/PureLayout/blob/master/Images/PureLayout.png?raw=true)](#)
+[![Build Status](http://img.shields.io/travis/smileyborg/PureLayout.svg?style=flat)](https://travis-ci.org/smileyborg/PureLayout) [![Version](http://img.shields.io/cocoapods/v/PureLayout.svg?style=flat)](http://cocoapods.org/?q=PureLayout) [![Platform](http://img.shields.io/cocoapods/p/PureLayout.svg?style=flat)](http://cocoapods.org/?q=PureLayout) [![License](http://img.shields.io/cocoapods/l/PureLayout.svg?style=flat)](LICENSE)
+
 The ultimate API for iOS & OS X Auto Layout — impressively simple, immensely powerful. PureLayout extends `UIView`/`NSView`, `NSArray`, and `NSLayoutConstraint` with a comprehensive Auto Layout API that is modeled after Apple's own frameworks. PureLayout is an Objective-C library that also works (and looks!) great with Swift using a bridging header.
 
 Writing Auto Layout code from scratch isn't easy. PureLayout provides a fully capable and developer-friendly interface for Auto Layout. It is designed for clarity and simplicity, and takes inspiration from the AutoLayout UI options available in Interface Builder while delivering far more flexibility. The API is also highly efficient, as it adds only a thin layer of third party code and is engineered for maximum performance.
 
 ## API Cheat Sheet
-This is just a handy overview of the core API methods. Explore the [header files](Source) for the full API and documentation. A couple of notes:
+This is just a handy overview of the core API methods. Explore the [header files](Source) for the full API, and find the complete documentation above the implementation of each method in the corresponding .m file. A couple of notes:
 
-*	*All of the API methods begin with `auto...` for easy autocompletion in Xcode!*
-*	*All methods that generate constraints also automatically add the constraint(s) to the correct view, then return the newly created constraint(s) for you to optionally store for later adjustment or removal.*
-*	*Many methods below also have a variant which includes a `relation:` parameter to make the constraint an inequality.*
+*	All of the API methods are namespaced with the prefix `auto...`, which also allows for easy autocompletion in Xcode!
+*	Methods that create constraints also automatically install (activate) the constraint(s), then return the new constraint(s) for you to optionally store for later adjustment or removal.
+*	Many methods below also have a variant which includes a `relation:` parameter to make the constraint an inequality.
 
-**`ALAttribute`**
+### Attributes
 
-Here is an [illustration of the ALAttribute constants](Images/PureLayout-ALAttributes.png) used throughout the API.
+PureLayout defines view attributes that are used to create auto layout constraints. Here is an [illustration of the most common attributes](Images/PureLayout-CommonAttributes.png).
 
-**[`UIView`/`NSView`](Source/ALView%2BPureLayout.h)**
+There are 5 specific attribute types, which are used throughout most of the API:
 
-    + autoRemoveConstraint(s):
-    - autoRemoveConstraintsAffectingView(AndSubviews)
+* `ALEdge`
+* `ALDimension`
+* `ALAxis`
+* `ALMargin` *available in iOS 8.0 and above only*
+* `ALMarginAxis` *available in iOS 8.0 and above only*
+
+Additionally, there is one generic attribute type, `ALAttribute`, which is effectively a union of all the specific types. You can think of this as the "supertype" of all of the specific attribute types, which means that it is always safe to cast a specific type to the generic `ALAttribute` type. (Note that the reverse is not true -- casting a generic ALAttribute to a specific attribute type is unsafe!)
+
+### [`UIView`/`NSView`](Source/ALView%2BPureLayout.h)
+
+	+ autoCreateConstraintsWithoutInstalling:
     + autoSetPriority:forConstraints:
+	+ autoSetIdentifier:forConstraints:
     - autoSetContent(CompressionResistance|Hugging)PriorityForAxis:
     - autoCenterInSuperview:
     - autoAlignAxisToSuperviewAxis:
-    - autoPinEdgeToSuperviewEdge:withInset:
-    - autoPinEdgesToSuperviewEdges:withInsets:(excludingEdge:)
+	- autoCenterInSuperviewMargins: // iOS 8.0+ only
+	- autoAlignAxisToSuperviewMarginAxis: // iOS 8.0+ only
+    - autoPinEdgeToSuperviewEdge:(withInset:)
+    - autoPinEdgesToSuperviewEdgesWithInsets:(excludingEdge:)
+	- autoPinEdgeToSuperviewMargin: // iOS 8.0+ only
+	- autoPinEdgesToSuperviewMargins(ExcludingEdge:) // iOS 8.0+ only
     - autoPinEdge:toEdge:ofView:(withOffset:)
     - autoAlignAxis:toSameAxisOfView:(withOffset:)
     - autoMatchDimension:toDimension:ofView:(withOffset:|withMultiplier:)
@@ -31,8 +47,14 @@ Here is an [illustration of the ALAttribute constants](Images/PureLayout-ALAttri
     - autoConstrainAttribute:toAttribute:ofView:(withOffset:|withMultiplier:)
     - autoPinTo(Top|Bottom)LayoutGuideOfViewController:withInset: // iOS only
 
-**[`NSArray`](Source/NSArray%2BPureLayout.h)**
+### [`NSArray`](Source/NSArray%2BPureLayout.h)
 
+	// Arrays of Constraints
+	- autoInstallConstraints
+    - autoRemoveConstraints
+    - autoIdentifyConstraints: // iOS 7.0+, OS X 10.9+ only
+	
+	// Arrays of Views
     - autoAlignViewsToEdge:
     - autoAlignViewsToAxis:
     - autoMatchViewsDimension:
@@ -40,10 +62,11 @@ Here is an [illustration of the ALAttribute constants](Images/PureLayout-ALAttri
     - autoDistributeViewsAlongAxis:withFixedSpacing:(insetSpacing:)(matchedSizes:)alignment:
     - autoDistributeViewsAlongAxis:withFixedSize:(insetSpacing:)alignment:
 
-**[`NSLayoutConstraint`](Source/NSLayoutConstraint%2BPureLayout.h)**
+### [`NSLayoutConstraint`](Source/NSLayoutConstraint%2BPureLayout.h)
 
-    - autoInstall
+	- autoInstall
     - autoRemove
+    - autoIdentify: // iOS 7.0+ only
 
 ## Setup
 *Note: PureLayout requires a minimum deployment target of iOS 6.0 or OS X 10.7*
@@ -65,17 +88,17 @@ That's it - now go write some beautifully simple Auto Layout code!
 
 That's it - now go write some beautifully simple Auto Layout code!
 
-### Migrating from [UIView+AutoLayout](https://github.com/smileyborg/UIView-AutoLayout)?
-If you are using the latest version of UIView+AutoLayout (v2.0.0), migrating to PureLayout is simple. The API is 100% compatible, so you only need to swap out the pod or library and update `#import "UIView+AutoLayout.h"` to `#import "PureLayout.h"` where necessary.
-
 ### Releases
 Releases are tagged in the git commit history using [semantic versioning](http://semver.org). Check out the [releases and release notes](https://github.com/smileyborg/PureLayout/releases) for each version.
 
+#### Upgrading from v1.x to v2.0?
+Upgrading from v1.x of the library to v2.0 should be a very simple and easy process. Please review the [migration guide](https://github.com/smileyborg/PureLayout/wiki/Migrating-from-PureLayout-v1.x-to-v2.0) for more information.
+
 ## Usage
 ### Example Project
-Check out the [example project](Example) included in the repository. It contains iOS and OS X demos of the API being used in various scenarios.
+Check out the [example project](Example) included in the repository (requires Xcode 6 or higher). It contains iOS and OS X demos of the API being used in various scenarios.
 
-On iOS, while running the app, tap on the screen to cycle through the demos. You can rotate the device to see the constraints in action (as well as toggle the taller in-call status bar in the iOS Simulator).
+On iOS, you can use different device simulators and rotate the device to see the constraints in action (as well as toggle the taller in-call status bar in the iOS Simulator).
 
 On OS X, while running the app, press any key to cycle through the demos. You can resize the window to see the constraints in action.
 
