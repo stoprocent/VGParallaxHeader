@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name         = 'VGParallaxHeader'
-    s.version      = '0.0.3'
+    s.version      = '0.0.4'
     s.platform     = :ios, '7.0'
     s.license      = { :type => 'MIT', :file => 'LICENSE' }
     s.summary      = 'Only Parallax Header Class that should work with all kinds of Table Views and Scroll Views while using Auto Layout.'
