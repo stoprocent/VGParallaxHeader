@@ -144,6 +144,7 @@ static void *VGParallaxHeaderObserverContext = &VGParallaxHeaderObserverContext;
     // Add Parallax Header
     if(parallaxHeader.isInsideTableView) {
         [(UITableView*)self setTableHeaderView:parallaxHeader];
+        [parallaxHeader setNeedsLayout];
     }
     else {
         [self addSubview:parallaxHeader];
