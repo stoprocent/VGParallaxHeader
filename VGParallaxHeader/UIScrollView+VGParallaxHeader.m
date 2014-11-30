@@ -20,19 +20,14 @@ static void *VGParallaxHeaderObserverContext = &VGParallaxHeaderObserverContext;
 - (instancetype)initWithScrollView:(UIScrollView *)scrollView
                        contentView:(UIView *)view
                               mode:(VGParallaxHeaderMode)mode
-                            height:(CGFloat)height
-                   shadowBehaviour:(VGParallaxHeaderShadowBehaviour)shadowBehaviour;
-
-- (void)updateShadowViewWithProgress:(CGFloat)progress;
+                            height:(CGFloat)height;
 
 @property (nonatomic, assign, readwrite, getter=isInsideTableView) BOOL insideTableView;
 
 @property (nonatomic, assign, readwrite) VGParallaxHeaderMode mode;
-@property (nonatomic, assign, readwrite) VGParallaxHeaderShadowBehaviour shadowBehaviour;
 
 @property (nonatomic, strong, readwrite) UIView *containerView;
 @property (nonatomic, strong, readwrite) UIView *contentView;
-@property (nonatomic, strong, readwrite) UIImageView *shadowView;
 
 @property (nonatomic, weak, readwrite) UIScrollView *scrollView;
 
@@ -44,33 +39,32 @@ static void *VGParallaxHeaderObserverContext = &VGParallaxHeaderObserverContext;
 
 @property (nonatomic, assign, readwrite) CGFloat progress;
 
+@property (nonatomic, strong, readwrite) NSArray *stickyViewContraints;
+
 @end
 
 #pragma mark - UIScrollView (Implementation)
 @implementation UIScrollView (VGParallaxHeader)
 
-
 - (void)setParallaxHeaderView:(UIView *)view
                          mode:(VGParallaxHeaderMode)mode
                        height:(CGFloat)height
+                  shadowBehaviour:(VGParallaxHeaderShadowBehaviour)shadowBehaviour
 {
     [self setParallaxHeaderView:view
                            mode:mode
-                         height:height
-                shadowBehaviour:VGParallaxHeaderShadowBehaviourHidden];
+                         height:height];
 }
 
 - (void)setParallaxHeaderView:(UIView *)view
                          mode:(VGParallaxHeaderMode)mode
                        height:(CGFloat)height
-              shadowBehaviour:(VGParallaxHeaderShadowBehaviour)shadowBehaviour
 {
     // New VGParallaxHeader
     self.parallaxHeader = [[VGParallaxHeader alloc] initWithScrollView:self
                                                            contentView:view
                                                                   mode:mode
-                                                                height:height
-                                                       shadowBehaviour:shadowBehaviour];
+                                                                height:height];
     // Calling this to position everything right
     [self shouldPositionParallaxHeader];
     
@@ -107,8 +101,6 @@ static void *VGParallaxHeaderObserverContext = &VGParallaxHeaderObserverContext;
     self.parallaxHeader.progress = scaleProgress;
     
     if (self.contentOffset.y < self.parallaxHeader.originalHeight) {
-        // Update Shadow View
-        [self.parallaxHeader updateShadowViewWithProgress:fminf(1, scaleProgress)];
         // This is where the magic is happening
         self.parallaxHeader.containerView.frame = CGRectMake(0, self.contentOffset.y, CGRectGetWidth(self.frame), height);
     }
@@ -121,8 +113,6 @@ static void *VGParallaxHeaderObserverContext = &VGParallaxHeaderObserverContext;
     self.parallaxHeader.progress = scaleProgress;
     
     if (self.contentOffset.y < 0) {
-        // Update Shadow View
-        [self.parallaxHeader updateShadowViewWithProgress:fminf(1, scaleProgress)];
         // This is where the magic is happening
         self.parallaxHeader.frame = CGRectMake(0, self.contentOffset.y, CGRectGetWidth(self.frame), height);
     }
@@ -180,7 +170,6 @@ static void *VGParallaxHeaderObserverContext = &VGParallaxHeaderObserverContext;
                        contentView:(UIView *)view
                               mode:(VGParallaxHeaderMode)mode
                             height:(CGFloat)height
-                   shadowBehaviour:(VGParallaxHeaderShadowBehaviour)shadowBehaviour
 {
     self = [super initWithFrame:CGRectMake(0, 0, CGRectGetWidth(scrollView.bounds), height)];
     if (!self) {
@@ -188,7 +177,6 @@ static void *VGParallaxHeaderObserverContext = &VGParallaxHeaderObserverContext;
     }
     
     self.mode = mode;
-    self.shadowBehaviour = shadowBehaviour;
     
     self.scrollView = scrollView;
     
@@ -206,8 +194,6 @@ static void *VGParallaxHeaderObserverContext = &VGParallaxHeaderObserverContext;
     [self addSubview:self.containerView];
     
     self.contentView = view;
-    
-    [self addShadowView];
     
     return self;
 }
@@ -278,9 +264,22 @@ static void *VGParallaxHeaderObserverContext = &VGParallaxHeaderObserverContext;
         if(!self.isInsideTableView) {
             self.scrollView.contentOffset = CGPointMake(0, -self.scrollView.contentInset.top);
         }
+        
+        // Refresh Sticky View Constraints
+        [self updateStickyViewConstraints];
     }
 }
 
+- (void)willMoveToSuperview:(UIView *)newSuperview
+{
+    if (self.superview && newSuperview == nil) {
+        [self.superview removeObserver:self
+                            forKeyPath:NSStringFromSelector(@selector(contentInset))
+                               context:VGParallaxHeaderObserverContext];
+    }
+}
+
+#pragma mark - VGParallaxHeader (Auto Layout)
 - (void)addContentViewModeFillConstraints
 {
     [self.contentView autoPinEdgeToSuperviewEdge:ALEdgeLeft
@@ -346,94 +345,83 @@ static void *VGParallaxHeaderObserverContext = &VGParallaxHeaderObserverContext;
                                                              withOffset:self.originalTopInset/2];
 }
 
-#pragma mark - VGParallaxHeader (Shadow)
-- (void)updateShadowViewWithProgress:(CGFloat)progress
+#pragma mark - VGParallaxHeader (Sticky View)
+- (void)setStickyView:(UIView *)stickyView
 {
-    switch (self.shadowBehaviour) {
-        case VGParallaxHeaderShadowBehaviourAppearing:
-            self.shadowView.alpha = 1 - progress;
-            break;
-        case VGParallaxHeaderShadowBehaviourDisappearing:
-            self.shadowView.alpha = progress;
-            break;
-        case VGParallaxHeaderShadowBehaviourAlways:
-        case VGParallaxHeaderShadowBehaviourHidden:
-        default:
-            self.shadowView.alpha = 1;
-            break;
+    // Make sure it will work with AutLayout
+    stickyView.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    // Add it to Parallax Header
+    [self.containerView insertSubview:stickyView
+                         aboveSubview:self.contentView];
+    
+    // Set Local Var
+    _stickyView = stickyView;
+    
+    // Refresh Constraints
+    [self updateStickyViewConstraints];
+}
+
+- (void)setStickyView:(UIView *)stickyView withHeight:(CGFloat)height
+{
+    // Set Sticky View
+    [self setStickyView:stickyView];
+    
+    // Add Height Constraint
+    self.stickyViewHeightConstraint = [self.stickyView autoSetDimension:ALDimensionHeight
+                                                                 toSize:height];
+}
+
+- (void)setStickyViewPosition:(VGParallaxHeaderStickyViewPosition)stickyViewPosition
+{
+    // Set Local Var
+    _stickyViewPosition = stickyViewPosition;
+    
+    // Refresh Constraints
+    [self updateStickyViewConstraints];
+}
+
+- (void)setStickyViewHeightConstraint:(NSLayoutConstraint *)stickyViewHeightConstraint
+{
+    // Remove Previous Height Constraint
+    if (_stickyViewHeightConstraint != nil) {
+        [self.stickyView removeConstraint:_stickyViewHeightConstraint];
     }
-}
-
-- (void)addShadowView
-{
-    if (self.shadowBehaviour == VGParallaxHeaderShadowBehaviourHidden) {
-        return;
+    
+    // Add Height Constraint
+    if ([self.stickyView.superview isEqual:self.containerView]) {
+        [self.stickyView addConstraint:stickyViewHeightConstraint];
     }
     
-    CGFloat shadowHeight = 30;
-    
-    UIImage *shadowImage = [self shadowViewImageWithHeight:shadowHeight];
-    UIImageView *shadowView = [[UIImageView alloc] initWithImage:shadowImage];
-    
-    shadowView.contentMode = UIViewContentModeScaleToFill;
-    shadowView.translatesAutoresizingMaskIntoConstraints = NO;
-    shadowView.alpha = (self.shadowBehaviour == VGParallaxHeaderShadowBehaviourDisappearing ? 1 : 0);
-    
-    // Add Shadow
-    [self addSubview:shadowView];
-    
-    // Constraints
-    [shadowView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero
-                                         excludingEdge:ALEdgeTop];
-    
-    [shadowView autoSetDimension:ALDimensionHeight
-                          toSize:shadowHeight];
-    
-    // Set property
-    self.shadowView = shadowView;
+    // Set Local Var
+    _stickyViewHeightConstraint = stickyViewHeightConstraint;
 }
 
-- (UIImage*)shadowViewImageWithHeight:(CGFloat)height
+- (void)updateStickyViewConstraints
 {
-    CGSize size = CGSizeMake(CGRectGetWidth(self.bounds), height);
-    // Begin Context
-    UIGraphicsBeginImageContextWithOptions(size, NO, [[UIScreen mainScreen] scale]);
-    
-    //// General Declarations
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    
-    //// Gradient Declarations
-    NSArray* gradient3Colors = [NSArray arrayWithObjects:
-                                (id)[UIColor colorWithWhite:0 alpha:0.3].CGColor,
-                                (id)[UIColor clearColor].CGColor, nil];
-    
-    CGFloat gradient3Locations[] = {0, 1};
-    CGGradientRef gradient3 = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)gradient3Colors, gradient3Locations);
-    
-    //// Rectangle Drawing
-    UIBezierPath* rectanglePath = [UIBezierPath bezierPathWithRect: (CGRect) {CGPointZero, size} ];
-    CGContextSaveGState(context);
-    [rectanglePath addClip];
-    CGContextDrawLinearGradient(context, gradient3, CGPointMake(0, size.height), CGPointMake(0, 0), 0);
-    CGContextRestoreGState(context);
-    
-    //// Cleanup
-    CGGradientRelease(gradient3);
-    CGColorSpaceRelease(colorSpace);
-    
-    UIImage *gradientImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return gradientImage;
-}
-
-- (void)willMoveToSuperview:(UIView *)newSuperview
-{
-    if (self.superview && newSuperview == nil) {
-        [self.superview removeObserver:self
-                            forKeyPath:NSStringFromSelector(@selector(contentInset))
-                               context:VGParallaxHeaderObserverContext];
+    // Make sure stickyView is added to Parallax Header
+    if ([self.stickyView.superview isEqual:self.containerView]) {
+        // Set Edges
+        ALEdge nonStickyEdge;
+        switch (self.stickyViewPosition) {
+            case VGParallaxHeaderStickyViewPositionTop:
+                nonStickyEdge = ALEdgeBottom;
+                break;
+            case VGParallaxHeaderStickyViewPositionBottom:
+            default:
+                nonStickyEdge = ALEdgeTop;
+                break;
+        }
+        
+        // Remove Previous Constraints
+        if (self.stickyViewContraints != nil) {
+            [self.stickyView removeConstraints:self.stickyViewContraints];
+            [self.containerView removeConstraints:self.stickyViewContraints];
+        }
+       
+        // Add Constraints
+        self.stickyViewContraints = [self.stickyView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(self.originalTopInset, 0, 0, 0)
+                                                                              excludingEdge:nonStickyEdge];
     }
 }
 
