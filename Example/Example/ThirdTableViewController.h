@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIScrollView+VGParallaxHeader.h"
 
-@interface ThirdTableViewController : UIViewController
+@interface ThirdTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+
+@property (nonatomic, weak) IBOutlet UITableView *tableView;
 
 @end
