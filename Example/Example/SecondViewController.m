@@ -43,8 +43,8 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     [self.scrollView shouldPositionParallaxHeader];
+
     // This is how you can implement appearing or disappearing of sticky view
-    
     [scrollView.parallaxHeader.stickyView setAlpha:scrollView.parallaxHeader.progress];
 }
 
