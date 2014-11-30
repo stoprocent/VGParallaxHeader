@@ -24,8 +24,16 @@
     
     [self.scrollView setParallaxHeaderView:headerView
                                       mode:VGParallaxHeaderModeCenter
-                                    height:200
-                           shadowBehaviour:VGParallaxHeaderShadowBehaviourDisappearing];
+                                    height:200];
+    
+    UILabel *stickyLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    stickyLabel.backgroundColor = [UIColor colorWithRed:1 green:0.749 blue:0.976 alpha:1];
+    stickyLabel.textAlignment = NSTextAlignmentCenter;
+    stickyLabel.text = @"Say hello to Sticky View :)";
+    
+    self.scrollView.parallaxHeader.stickyViewPosition = VGParallaxHeaderStickyViewPositionTop;
+    [self.scrollView.parallaxHeader setStickyView:stickyLabel
+                                      withHeight:40];
     
     self.scrollView.parallaxHeader.backgroundColor = [UIColor lightGrayColor];
 }

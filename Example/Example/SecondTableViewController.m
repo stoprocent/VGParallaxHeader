@@ -24,8 +24,7 @@
     
     [self.tableView setParallaxHeaderView:self.headerView
                                      mode:VGParallaxHeaderModeTopFill
-                                   height:200
-                          shadowBehaviour:VGParallaxHeaderShadowBehaviourHidden];
+                                   height:200];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle

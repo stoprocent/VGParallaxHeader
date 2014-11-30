@@ -23,15 +23,24 @@
     
     [self.tableView setParallaxHeaderView:headerView
                                      mode:VGParallaxHeaderModeFill
-                                   height:200
-                          shadowBehaviour:VGParallaxHeaderShadowBehaviourAppearing];
+                                   height:200];
+    
+    UILabel *stickyLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    stickyLabel.backgroundColor = [UIColor colorWithRed:1 green:0.749 blue:0.976 alpha:1];
+    stickyLabel.textAlignment = NSTextAlignmentCenter;
+    stickyLabel.text = @"Say hello to Sticky View :)";
+    
+    self.tableView.parallaxHeader.stickyViewPosition = VGParallaxHeaderStickyViewPositionTop;
+    [self.tableView.parallaxHeader setStickyView:stickyLabel
+                                      withHeight:40];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     [self.tableView shouldPositionParallaxHeader];
-    // 
-    NSLog(@"Progress: %f", scrollView.parallaxHeader.progress);
+
+    // Log Parallax Progress
+    //NSLog(@"Progress: %f", scrollView.parallaxHeader.progress);
 }
 
 - (void)viewDidLayoutSubviews
