@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D5DCD141A2B4BA500FE7348 /* ThirdTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D5DCD131A2B4BA500FE7348 /* ThirdTableViewController.m */; };
 		0D8D815D19EBE21400ABAB19 /* HeaderViewWithImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D8D815C19EBE21400ABAB19 /* HeaderViewWithImage.m */; };
 		0D8D815F19EBE22500ABAB19 /* HeaderViewWithImage.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D8D815E19EBE22500ABAB19 /* HeaderViewWithImage.xib */; };
 		0D8D816219EBF20A00ABAB19 /* UIColor+CrossFade.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D8D816119EBF20A00ABAB19 /* UIColor+CrossFade.m */; };
@@ -37,6 +38,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0D5DCD121A2B4BA500FE7348 /* ThirdTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThirdTableViewController.h; sourceTree = "<group>"; };
+		0D5DCD131A2B4BA500FE7348 /* ThirdTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThirdTableViewController.m; sourceTree = "<group>"; };
 		0D8D815B19EBE21400ABAB19 /* HeaderViewWithImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeaderViewWithImage.h; sourceTree = "<group>"; };
 		0D8D815C19EBE21400ABAB19 /* HeaderViewWithImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeaderViewWithImage.m; sourceTree = "<group>"; };
 		0D8D815E19EBE22500ABAB19 /* HeaderViewWithImage.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeaderViewWithImage.xib; sourceTree = "<group>"; };
@@ -90,6 +93,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0D5DCD111A2B4B8600FE7348 /* Table 3 */ = {
+			isa = PBXGroup;
+			children = (
+				0D5DCD121A2B4BA500FE7348 /* ThirdTableViewController.h */,
+				0D5DCD131A2B4BA500FE7348 /* ThirdTableViewController.m */,
+			);
+			name = "Table 3";
+			sourceTree = "<group>";
+		};
 		0DD8326E19D5AB8E00F214D3 = {
 			isa = PBXGroup;
 			children = (
@@ -117,6 +129,7 @@
 				0DD832A319D5ABAE00F214D3 /* VGParallaxHeader */,
 				0DFA6F1719FD092400E253CE /* Table 1 */,
 				0DFA6F1819FD093100E253CE /* Table 2 */,
+				0D5DCD111A2B4B8600FE7348 /* Table 3 */,
 				0DFA6F1919FD093900E253CE /* Scroll 1 */,
 				0DFA6F1A19FD094500E253CE /* Scroll 2 */,
 				0DFA6F1D19FD099800E253CE /* Storyboard 1 */,
@@ -389,6 +402,7 @@
 				0DD8328619D5AB8E00F214D3 /* SecondViewController.m in Sources */,
 				0DD832A619D5ABAE00F214D3 /* UIScrollView+VGParallaxHeader.m in Sources */,
 				0DD832A919D5AE8700F214D3 /* FirstTableViewController.m in Sources */,
+				0D5DCD141A2B4BA500FE7348 /* ThirdTableViewController.m in Sources */,
 				0DD832AF19D5B13500F214D3 /* HeaderView.m in Sources */,
 				0D8D816219EBF20A00ABAB19 /* UIColor+CrossFade.m in Sources */,
 				0DD8328019D5AB8E00F214D3 /* AppDelegate.m in Sources */,
