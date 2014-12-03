@@ -1,6 +1,10 @@
 # VGParallaxHeader
 Parallax Header Class (UIScrollView/UITableView Category) that should work with all kinds of Table Views and Scroll Views while using Auto Layout.
 
+**It is using tableHeaderView** so no ugly hacks by adding subview to UITableView and changing contentInset.
+If you change contentInset section headers are displayed wrong. 
+And YES ... it's very fast ;)
+
 **Best way to explore all configurations is to download Example Project and try it.**
 
 ### Demo GIF
