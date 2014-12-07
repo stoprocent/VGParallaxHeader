@@ -96,11 +96,17 @@ static void *VGParallaxHeaderObserverContext = &VGParallaxHeaderObserverContext;
 
 - (void)positionTableViewParallaxHeader
 {
-    CGFloat height = self.contentOffset.y * -1 + self.parallaxHeader.originalHeight;
     CGFloat scaleProgress = fmaxf(0, (1 - ((self.contentOffset.y + self.parallaxHeader.originalTopInset) / self.parallaxHeader.originalHeight)));
     self.parallaxHeader.progress = scaleProgress;
     
     if (self.contentOffset.y < self.parallaxHeader.originalHeight) {
+        // We can move height to if here because its uitableview
+        CGFloat height = self.contentOffset.y * -1 + self.parallaxHeader.originalHeight;
+        // Im not 100% sure if this will only speed up VGParallaxHeaderModeCenter
+        // but on other modes it can be visible. 0.5px
+        if (self.parallaxHeader.mode == VGParallaxHeaderModeCenter) {
+            height = round(height);
+        }
         // This is where the magic is happening
         self.parallaxHeader.containerView.frame = CGRectMake(0, self.contentOffset.y, CGRectGetWidth(self.frame), height);
     }
@@ -342,7 +348,7 @@ static void *VGParallaxHeaderObserverContext = &VGParallaxHeaderObserverContext;
     
     self.insetAwarePositionConstraint = [self.contentView autoAlignAxis:ALAxisHorizontal
                                                        toSameAxisOfView:self.containerView
-                                                             withOffset:self.originalTopInset/2];
+                                                             withOffset:round(self.originalTopInset/2)];
 }
 
 #pragma mark - VGParallaxHeader (Sticky View)
