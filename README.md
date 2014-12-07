@@ -25,9 +25,9 @@ This version fix a little glitch i didnt notice in VGParallaxHeaderModeCenter mo
 parallax header view height will jump 0.0f-0.5f. This was causing layoutSubviews 
 being called on each scrollViewDidScroll. 
 
-** Please note that VGParallaxHeaderModeCenter should be the fastest mode. **
+**Please note that VGParallaxHeaderModeCenter should be the fastest mode.**
 
-** I think I'm almost ready to mark it as version 1.0 soon. If you have any requests or ideas let me know. **
+**I think I'm almost ready to mark it as version 1.0 soon. If you have any requests or ideas let me know.**
 
 ### Version 0.0.5 Update
 
