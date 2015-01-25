@@ -279,9 +279,11 @@ static void *VGParallaxHeaderObserverContext = &VGParallaxHeaderObserverContext;
 - (void)willMoveToSuperview:(UIView *)newSuperview
 {
     if (self.superview && newSuperview == nil) {
-        [self.superview removeObserver:self
-                            forKeyPath:NSStringFromSelector(@selector(contentInset))
-                               context:VGParallaxHeaderObserverContext];
+        if ([self.superview respondsToSelector:@selector(contentInset)]) {
+            [self.superview removeObserver:self
+                                forKeyPath:NSStringFromSelector(@selector(contentInset))
+                                   context:VGParallaxHeaderObserverContext];
+        }
     }
 }
 
