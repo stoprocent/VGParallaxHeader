@@ -67,7 +67,7 @@ Import UIScrollView+VGParallaxHeader.h, and use as follows:
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     // This must be called in order to work
-    [self.scrollView shouldPositionParallaxHeader];
+    [scrollView shouldPositionParallaxHeader];
     
     // scrollView.parallaxHeader.progress - is progress of current scroll
     NSLog(@"Progress: %f", scrollView.parallaxHeader.progress);
