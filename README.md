@@ -76,3 +76,7 @@ Import UIScrollView+VGParallaxHeader.h, and use as follows:
     [scrollView.parallaxHeader.stickyView setAlpha:scrollView.parallaxHeader.progress];
 }
 ```
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/stoprocent/vgparallaxheader/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
