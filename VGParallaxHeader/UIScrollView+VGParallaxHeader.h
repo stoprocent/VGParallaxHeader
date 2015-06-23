@@ -56,6 +56,8 @@ typedef NS_ENUM(NSInteger, VGParallaxHeaderShadowBehaviour) {
                        height:(CGFloat)height
               shadowBehaviour:(VGParallaxHeaderShadowBehaviour)shadowBehaviour __deprecated_msg("Use sticky view instead of shadow");
 
+- (void)updateParallaxHeaderViewHeight:(CGFloat)height;
+
 - (void)shouldPositionParallaxHeader;
 
 @end
