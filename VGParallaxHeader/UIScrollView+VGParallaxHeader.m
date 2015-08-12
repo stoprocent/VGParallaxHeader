@@ -9,7 +9,7 @@
 
 #import <objc/runtime.h>
 #import <QuartzCore/QuartzCore.h>
-#import <PureLayout.h>
+#import <PureLayout/PureLayout.h>
 
 static char UIScrollViewVGParallaxHeader;
 static void *VGParallaxHeaderObserverContext = &VGParallaxHeaderObserverContext;
