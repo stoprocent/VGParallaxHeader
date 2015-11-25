@@ -256,6 +256,9 @@ static void *VGParallaxHeaderObserverContext = &VGParallaxHeaderObserverContext;
         case VGParallaxHeaderModeTopFill:
             [self addContentViewModeTopFillConstraints];
             break;
+        case VGParallaxHeaderModeBottomFill:
+            [self addContentViewModeBottomFillConstraints];
+            break;
         case VGParallaxHeaderModeCenter:
         default:
             [self addContentViewModeCenterConstraints];
@@ -350,6 +353,30 @@ static void *VGParallaxHeaderObserverContext = &VGParallaxHeaderObserverContext;
 {
     NSArray *array = [self.contentView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(self.originalTopInset, 0, 0, 0)
                                                                 excludingEdge:ALEdgeBottom];
+    self.insetAwarePositionConstraint = [array firstObject];
+    
+    NSLayoutConstraint *constraint = [self.contentView autoSetDimension:ALDimensionHeight
+                                                                 toSize:self.originalHeight
+                                                               relation:NSLayoutRelationGreaterThanOrEqual];
+    constraint.priority = UILayoutPriorityRequired;
+    
+    self.insetAwareSizeConstraint = [self.contentView autoMatchDimension:ALDimensionHeight
+                                                             toDimension:ALDimensionHeight
+                                                                  ofView:self.containerView
+                                                              withOffset:-self.originalTopInset];
+    self.insetAwareSizeConstraint.priority = UILayoutPriorityDefaultHigh;
+}
+
+
+- (void)addContentViewModeBottomFillConstraints
+{
+    [self.contentView autoPinEdgeToSuperviewEdge:ALEdgeLeft
+                                       withInset:0];
+    [self.contentView autoPinEdgeToSuperviewEdge:ALEdgeRight
+                                       withInset:0];
+    
+    NSArray *array = [self.contentView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(self.originalTopInset, 0, 0, 0)
+                                                                excludingEdge:ALEdgeTop];
     self.insetAwarePositionConstraint = [array firstObject];
     
     NSLayoutConstraint *constraint = [self.contentView autoSetDimension:ALDimensionHeight
