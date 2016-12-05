@@ -32,8 +32,8 @@
     stickyLabel.textAlignment = NSTextAlignmentCenter;
     stickyLabel.text = @"Say hello to Sticky View :)";
     
-    self.scrollView.parallaxHeader.stickyViewPosition = VGParallaxHeaderStickyViewPositionBottom;
-    [self.scrollView.parallaxHeader setStickyView:stickyLabel
+    self.scrollView.vg_parallaxHeader.stickyViewPosition = VGParallaxHeaderStickyViewPositionBottom;
+    [self.scrollView.vg_parallaxHeader setStickyView:stickyLabel
                                       withHeight:40];
     
     
@@ -45,7 +45,7 @@
     [self.scrollView shouldPositionParallaxHeader];
 
     // This is how you can implement appearing or disappearing of sticky view
-    [scrollView.parallaxHeader.stickyView setAlpha:scrollView.parallaxHeader.progress];
+    [scrollView.vg_parallaxHeader.stickyView setAlpha:scrollView.vg_parallaxHeader.progress];
 }
 
 - (void)viewDidLayoutSubviews
