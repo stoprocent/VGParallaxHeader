@@ -30,8 +30,8 @@
     stickyLabel.textAlignment = NSTextAlignmentCenter;
     stickyLabel.text = @"Say hello to Sticky View :)";
     
-    self.tableView.parallaxHeader.stickyViewPosition = VGParallaxHeaderStickyViewPositionTop;
-    [self.tableView.parallaxHeader setStickyView:stickyLabel
+    self.tableView.vg_parallaxHeader.stickyViewPosition = VGParallaxHeaderStickyViewPositionTop;
+    [self.tableView.vg_parallaxHeader setStickyView:stickyLabel
                                       withHeight:40];
 }
 

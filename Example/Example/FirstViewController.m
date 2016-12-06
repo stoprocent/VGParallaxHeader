@@ -31,11 +31,11 @@
     stickyLabel.textAlignment = NSTextAlignmentCenter;
     stickyLabel.text = @"Say hello to Sticky View :)";
     
-    self.scrollView.parallaxHeader.stickyViewPosition = VGParallaxHeaderStickyViewPositionTop;
-    [self.scrollView.parallaxHeader setStickyView:stickyLabel
+    self.scrollView.vg_parallaxHeader.stickyViewPosition = VGParallaxHeaderStickyViewPositionTop;
+    [self.scrollView.vg_parallaxHeader setStickyView:stickyLabel
                                       withHeight:40];
     
-    self.scrollView.parallaxHeader.backgroundColor = [UIColor lightGrayColor];
+    self.scrollView.vg_parallaxHeader.backgroundColor = [UIColor lightGrayColor];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle

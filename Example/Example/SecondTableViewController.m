@@ -36,7 +36,7 @@
 {
     [self.tableView shouldPositionParallaxHeader];
     
-    CGFloat ratio = fmaxf(0, scrollView.parallaxHeader.progress - 1);
+    CGFloat ratio = fmaxf(0, scrollView.vg_parallaxHeader.progress - 1);
     self.headerView.backgroundColor = [UIColor colorForFadeBetweenFirstColor:[UIColor colorWithRed:0.59 green:0.85 blue:0.27 alpha:1]
                                                                  secondColor:[UIColor colorWithRed:0.86 green:0.09 blue:0.13 alpha:1]
                                                                      atRatio:ratio];

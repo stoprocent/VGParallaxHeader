@@ -45,7 +45,7 @@ typedef NS_ENUM(NSInteger, VGParallaxHeaderShadowBehaviour) {
 
 @interface UIScrollView (VGParallaxHeader)
 
-@property (nonatomic, strong, readonly) VGParallaxHeader *parallaxHeader;
+@property (nonatomic, strong, readonly) VGParallaxHeader *vg_parallaxHeader;
 
 - (void)setParallaxHeaderView:(UIView *)view
                          mode:(VGParallaxHeaderMode)mode
